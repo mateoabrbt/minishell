@@ -10,9 +10,7 @@
 
 typedef struct minishell_structure
 {
-    int status;
     int array_count;
-    int path_status;
     int home_status;
     int path_access;
     char *arg;
@@ -36,8 +34,8 @@ typedef struct pointer_structure_char
 }t_handle_args_char;
 
 int minishell(char **env);
-int test_path(t_minishell *shell);
 void display_minishell(void);
+void test_path(t_minishell *shell);
 void free_minishell(t_minishell *shell);
 void minishell_init(t_minishell *shell);
 void fill_struct(t_minishell *shell, char **env);
@@ -46,6 +44,7 @@ void env_minishell(t_minishell *shell, char **env);
 void exit_minishell(t_minishell *shell, char **env);
 void clean_minishell(t_minishell *shell, char **env);
 char *modify_env(char *dest, char *str, char *str2, char *str3);
+char **clean_env(char **env);
 char **handle_arg(t_minishell *shell, char **env);
 char **cd_minishell(t_minishell *shell, char **env);
 char **setenv_minishell(t_minishell *shell, char **env);

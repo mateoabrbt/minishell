@@ -18,7 +18,6 @@ int find_path(char **env)
             break;
         if (my_strncmp("PATH=", env[i], '=', '=') == 0 
                 && env[i + 1] == NULL) {
-            my_puterror("Invalid environment.\n");
             return (-1);
         }
     }

@@ -16,18 +16,14 @@ char *find_oldpwd(char **env)
     int i;
     char *oldpwd = NULL;
 
-    if (env == NULL)
+    for (i = 0; env[i] != NULL; i++) {
+        if (my_strncmp("OLDPWD=", env[i], '=', '=') == 1)
+            break;
+        if (my_strncmp("OLDPWD=", env[i], '=', '=') == 0 
+            && env[i + 1] == NULL)
         return NULL;
-    else {
-        for (i = 0; env[i] != NULL; i++) {
-            if (my_strncmp("OLDPWD=", env[i], '=', '=') == 1)
-                break;
-            if (my_strncmp("OLDPWD=", env[i], '=', '=') == 0 
-                    && env[i + 1] == NULL)
-                return NULL;
-        }
-        oldpwd = &env[i][7];
     }
+    oldpwd = &env[i][7];
     return oldpwd;
 }
 
@@ -35,14 +31,9 @@ int cd_old(char **env)
 {
     char *path = NULL;
 
-    if (path == NULL) {
-        my_puterror(": No such file or directory.\n");
-        return -1;
-    }
+    path = find_oldpwd(env);
     if (chdir(path) == -1) {
-        path = find_oldpwd(env);
-        my_puterror(path);
-        my_puterror(" : No such file or directory.\n");
+        my_puterror(": No such file or directory.\n");
         return -1;
     }
     return 0;
@@ -50,8 +41,10 @@ int cd_old(char **env)
 
 int cd_home(t_minishell *shell)
 {
-    if (shell->home == NULL)
+    if (shell->home == NULL) {
         my_puterror("cd: No home directory.\n");
+        return -1;
+    }
     if (chdir(shell->home) == -1 && shell->home != NULL) {
         my_puterror(": No such file or directory.\n");
         return -1;

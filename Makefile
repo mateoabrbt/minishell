@@ -19,6 +19,7 @@ SRC		=	src/main.c				\
 			src/exec_program.c		\
 			src/fill_struct.c		\
 			src/modify_pwd_oldpwd.c	\
+			src/clean_env.c
 
 
 NAME    =	mysh

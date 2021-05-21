@@ -23,22 +23,22 @@ static const t_handle_args_char ARGS_CHAR[] = {
 
 char **handle_arg(t_minishell *shell, char **env)
 {
-    for (long unsigned int i = 0; i < sizeof(ARGS_VOID)
-            / sizeof(t_handle_args_void); i += 1)
+    for (long unsigned int i = 0; i <
+        sizeof(ARGS_VOID) / sizeof(t_handle_args_void); i += 1)
         if (my_strncmp(ARGS_VOID[i].arg,
             shell->array[shell->array_count][0], '\0', '\0') == 1) {
             ARGS_VOID[i].function(shell, env);
             return (env);
         }
-    for (long unsigned int i = 0; i < sizeof(ARGS_CHAR)
-            / sizeof(t_handle_args_char); i += 1)
+    for (long unsigned int i = 0; i <
+        sizeof(ARGS_CHAR) / sizeof(t_handle_args_char); i += 1)
         if (my_strncmp(ARGS_CHAR[i].arg,
             shell->array[shell->array_count][0], '\0', '\0') == 1) {
             env = ARGS_CHAR[i].function(shell, env);
             return (env);
         }
-    if (test_path(shell) == -1)
-        return (NULL);
+    if (shell->paths != NULL)
+        test_path(shell);
     exec_program(shell, env);
     return (env);
 }

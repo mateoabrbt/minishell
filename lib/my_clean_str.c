@@ -10,58 +10,30 @@
 #include <stdio.h>
 #include "lib.h"
 
-/*int my_strlen(char *str)
+char *remove_char(char *str, int o)
 {
-    int i = 0;
+    char *new_str = str;
 
-    for (; str[i] != '\0'; i++);
-    return i;
-}*/
-
-int my_clean_start(char *str)
-{
-    int i = 0;
-
-    if (str[0] == ' ' || str[0] == '\t'
-        || str[0] == ';' || str[0] == '\n')
-        for (; str[i] == ' ' || str[i] == '\t'
-            || str[i] == ';' || str[i] == '\n'; i++);
-    return i;
+    for (int i = o; str[i] != '\0'; i += 1)
+        str[i] = new_str[i + 1];
+    return str;
 }
 
-int my_clean_end(char *str)
+char *my_strcpy_clean_str(char *str)
 {
-    int i = 0;
-    int endstr = 0;
+    int size = 0;
 
-    for (; str[i] != '\0'; i++)
-        if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n' && str[i] != ';')
-            endstr = i;
-    str[endstr + 1] = '\0';
-    return endstr;
-}
-
-char *my_strcpy_clean_str(char *src, char *dest, int startstr, int endstr)
-{
-    int i = 0;
-    int o = 0;
-    int temp = 0;
-
-    for (i = startstr; i <= endstr; i++) {
-        if (src[i] == ' ' || src[i] == '\t') {
-            temp = i + 1;
-            while ((src[temp] == ' ' || src[temp] == '\t')
-                    && src[temp] != '\0') {
-                if (src[temp] == ' ' || src[temp] == '\t')
-                    i++;
-                temp++;
-            }
-        }
-        dest[o] = src[i];
-        o++;
+    for (int i = 0; str[i] != '\n' && str[i] != '\0'; ++i) {
+        if ((str[i] == ' ' || str[i] == '\t')
+                && (i == 0 || str[i + 1] == ' ' || str[i + 1] == '\t'
+                || str[i + 1] == '\0' || str[i + 1] == '\n')) {
+            str = remove_char(str, i--);
+        } else if (str[i] == '\t')
+            str[i] = ' ';
     }
-    dest[o] = '\0';
-    return dest;
+    size = my_strlen(str);
+    str[size - 1] = '\0';
+    return str;
 }
 
 char *my_strcpy_clean_str_2(char *src, char *dest)
@@ -77,7 +49,7 @@ char *my_strcpy_clean_str_2(char *src, char *dest)
                 if (src[temp] == ' ')
                     i += 1;
             }
-        if (src[i + 1] == ';') {
+        else if (src[i + 1] == ';') {
             temp = i;
             if (src[temp] == ' ')
                 i += 1;
@@ -90,27 +62,11 @@ char *my_strcpy_clean_str_2(char *src, char *dest)
 
 char *my_clean_str(char *str)
 {
-    int startstr = 0;
-    int endstr = 0;
-    int strcount = 0;
-    int size = 0;
     char *clean_str = NULL;
     char *clean_str_2 = NULL;
 
-    startstr = my_clean_start(str);
-    endstr = my_clean_end(str);
-    strcount = my_strlen(str);
-    size = ((strcount - startstr) - (strcount - endstr) + 2);
-    clean_str = malloc(sizeof(char) * size);
-    clean_str = my_strcpy_clean_str(str, clean_str, startstr, endstr);
+    clean_str = my_strcpy_clean_str(str);
     clean_str_2 = malloc(my_strlen(clean_str) + 1);
     clean_str_2 = my_strcpy_clean_str_2(clean_str, clean_str_2);
     return clean_str_2;
 }
-
-/*void main(int ac, char **av)
-{
-    char *str = NULL;
-
-    printf("%s\n", my_clean_str(av[1]));
-}*/

@@ -32,19 +32,22 @@ void create_new_path(t_minishell *shell)
     free(arg);
 }
 
-int test_path(t_minishell *shell)
+void test_path(t_minishell *shell)
 {
-    create_new_path(shell);
-    for (shell->path_access = 0; shell->paths[shell->path_access]
-            != NULL; shell->path_access++) {
-        if (access(shell->paths[shell->path_access], X_OK) == 0)
-            break;
-        if (access(shell->paths[shell->path_access], X_OK) == -1
-            && shell->paths[shell->path_access + 1] == NULL
-            && shell->array[shell->array_count][0][0] != '\n') {
-            my_puterror(shell->array[shell->array_count][0]);
-            my_puterror(": Command not found.\n");
+    if (access(shell->array[shell->array_count][0], X_OK) == 0)
+        shell->path_access = -1;
+    else {
+        create_new_path(shell);
+        for (shell->path_access = 0; shell->paths[shell->path_access]
+                != NULL; shell->path_access++) {
+            if (access(shell->paths[shell->path_access], X_OK) == 0)
+                break;
+            if (access(shell->paths[shell->path_access], X_OK) == -1
+                && shell->paths[shell->path_access + 1] == NULL
+                && shell->array[shell->array_count][0][0] != '\n') {
+                my_puterror(shell->array[shell->array_count][0]);
+                my_puterror(": Command not found.\n");
+            }
         }
     }
-    return (shell->path_access);
 }

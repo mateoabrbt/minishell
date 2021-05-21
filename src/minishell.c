@@ -25,10 +25,11 @@ char *get_info_minishell(t_minishell *shell, char **env)
 
     minishell_init(shell);
     fill_struct(shell, env);
-    if (isatty(shell->status) == 1)
+    if (isatty(STDIN_FILENO) == 1)
         display_minishell();
     if (getline(&bufferarg, &sizeread, stdin) == -1) {
-        my_putstr("exit\n");
+        if (isatty(STDIN_FILENO) == 1)
+            my_putstr("exit\n");
         exit(0);
     }
     return bufferarg;
@@ -50,10 +51,9 @@ int minishell(char **env)
         shell.array = tmp;
         shell.array_count = tmp_count;
         env = handle_arg(&shell, env);
-        if (env == NULL)
-            return (-1);
         tmp_count++;
-        free_minishell(&shell);
+        if (shell.paths)
+            free_minishell(&shell);
     }
     minishell(env);
     return (0);

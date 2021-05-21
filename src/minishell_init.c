@@ -10,10 +10,8 @@
 
 void minishell_init(t_minishell *shell)
 {
-    shell->status = 1;
     shell->array_count = 0;
     shell->path_access = 0;
-    shell->path_status = 0;
     shell->home_status = 0;
     shell->arg = NULL;
     shell->home = NULL;
